@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { toast } from 'react-hot-toast';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikConfig } from 'formik';
 import Input from '@/components/Input';
 import ImageUpload from '@/components/ImageUpload';
+import { Home } from '../types';
 
 const ListingSchema = Yup.object().shape({
   title: Yup.string().trim().required(),
@@ -16,7 +16,19 @@ const ListingSchema = Yup.object().shape({
   baths: Yup.number().positive().integer().min(1).required(),
 });
 
-const ListingForm = ({
+type ListingFormValues = Pick<
+  Home,
+  'title' | 'description' | 'price' | 'guests' | 'beds' | 'baths'
+>;
+
+type ListingFormProps = {
+  initialValues?: ListingFormValues & Pick<Home, 'image'>;
+  redirectPath?: string;
+  buttonText?: string;
+  onSubmit?: (values: ListingFormValues & Pick<Home, 'image'>) => void;
+};
+
+const ListingForm: FC<ListingFormProps> = ({
   initialValues = null,
   redirectPath = '',
   buttonText = 'Submit',
@@ -27,11 +39,11 @@ const ListingForm = ({
   const [disabled, setDisabled] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialValues?.image ?? '');
 
-  const upload = async image => {
+  const upload = async (image: Home['image']) => {
     // TODO: Upload image to remote storage
   };
 
-  const handleOnSubmit = async (values = null) => {
+  const handleOnSubmit: FormikConfig<ListingFormValues>['onSubmit'] = async (values) => {
     let toastId;
     try {
       setDisabled(true);
@@ -63,7 +75,7 @@ const ListingForm = ({
 
   return (
     <div>
-      <div className="mb-8 max-w-md">
+      <div className='mb-8 max-w-md'>
         <ImageUpload
           initialImage={{ src: image, alt: initialFormValues.title }}
           onChangePicture={upload}
@@ -77,67 +89,67 @@ const ListingForm = ({
         onSubmit={handleOnSubmit}
       >
         {({ isSubmitting, isValid }) => (
-          <Form className="space-y-8">
-            <div className="space-y-6">
+          <Form className='space-y-8'>
+            <div className='space-y-6'>
               <Input
-                name="title"
-                type="text"
-                label="Title"
-                placeholder="Entire rental unit - Amsterdam"
+                name='title'
+                type='text'
+                label='Title'
+                placeholder='Entire rental unit - Amsterdam'
                 disabled={disabled}
               />
 
               <Input
-                name="description"
-                type="textarea"
-                label="Description"
-                placeholder="Very charming and modern apartment in Amsterdam..."
+                name='description'
+                type='textarea'
+                label='Description'
+                placeholder='Very charming and modern apartment in Amsterdam...'
                 disabled={disabled}
                 rows={5}
               />
 
               <Input
-                name="price"
-                type="number"
-                min="0"
-                label="Price per night"
-                placeholder="100"
+                name='price'
+                type='number'
+                min='0'
+                label='Price per night'
+                placeholder='100'
                 disabled={disabled}
               />
 
-              <div className="flex space-x-4">
+              <div className='flex space-x-4'>
                 <Input
-                  name="guests"
-                  type="number"
-                  min="0"
-                  label="Guests"
-                  placeholder="2"
+                  name='guests'
+                  type='number'
+                  min='0'
+                  label='Guests'
+                  placeholder='2'
                   disabled={disabled}
                 />
                 <Input
-                  name="beds"
-                  type="number"
-                  min="0"
-                  label="Beds"
-                  placeholder="1"
+                  name='beds'
+                  type='number'
+                  min='0'
+                  label='Beds'
+                  placeholder='1'
                   disabled={disabled}
                 />
                 <Input
-                  name="baths"
-                  type="number"
-                  min="0"
-                  label="Baths"
-                  placeholder="1"
+                  name='baths'
+                  type='number'
+                  min='0'
+                  label='Baths'
+                  placeholder='1'
                   disabled={disabled}
                 />
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className='flex justify-end'>
               <button
-                type="submit"
+                type='submit'
                 disabled={disabled || !isValid}
-                className="bg-rose-600 text-white py-2 px-6 rounded-md focus:outline-none focus:ring-4 focus:ring-rose-600 focus:ring-opacity-50 hover:bg-rose-500 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-rose-600"
+                className='bg-rose-600 text-white py-2 px-6 rounded-md focus:outline-none focus:ring-4 focus:ring-rose-600 focus:ring-opacity-50 hover:bg-rose-500 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-rose-600'
               >
                 {isSubmitting ? 'Submitting...' : buttonText}
               </button>
@@ -147,21 +159,6 @@ const ListingForm = ({
       </Formik>
     </div>
   );
-};
-
-ListingForm.propTypes = {
-  initialValues: PropTypes.shape({
-    image: PropTypes.string,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    price: PropTypes.number,
-    guests: PropTypes.number,
-    beds: PropTypes.number,
-    baths: PropTypes.number,
-  }),
-  redirectPath: PropTypes.string,
-  buttonText: PropTypes.string,
-  onSubmit: PropTypes.func,
 };
 
 export default ListingForm;

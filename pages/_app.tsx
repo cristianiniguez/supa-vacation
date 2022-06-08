@@ -1,7 +1,8 @@
-import '../styles/globals.css';
+import { AppProps } from 'next/app';
 import { Toaster } from 'react-hot-toast';
+import '../styles/globals.css';
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Component {...pageProps} />

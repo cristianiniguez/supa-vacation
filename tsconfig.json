@@ -13,7 +13,8 @@
     "noEmit": true,
     "paths": {
       "@/components/*": ["components/*"],
-      "@/lib/*": ["lib/*"]
+      "@/lib/*": ["lib/*"],
+      "@/types/*": ["types/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
