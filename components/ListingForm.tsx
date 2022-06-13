@@ -6,6 +6,7 @@ import { Formik, Form, FormikConfig } from 'formik';
 import Input from '@/components/Input';
 import ImageUpload from '@/components/ImageUpload';
 import { HomeCreateData } from '@/types/home';
+import axios from 'axios';
 
 const ListingSchema = Yup.object().shape({
   title: Yup.string().trim().required(),
@@ -22,7 +23,7 @@ type ListingFormProps = {
   initialValues?: HomeCreateData;
   redirectPath?: string;
   buttonText?: string;
-  onSubmit?: (values: HomeCreateData) => void;
+  onSubmit?: (values: HomeCreateData) => void | Promise<void>;
 };
 
 const ListingForm: FC<ListingFormProps> = ({
@@ -37,7 +38,21 @@ const ListingForm: FC<ListingFormProps> = ({
   const [imageUrl, setImageUrl] = useState(initialValues?.image ?? '');
 
   const upload = async (image: HomeCreateData['image']) => {
-    // TODO: Upload image to remote storage
+    if (!image) return;
+
+    let toastId;
+    try {
+      setDisabled(true);
+      toastId = toast.loading('Uploading ...');
+      const { data } = await axios.post('/api/image-upload', { image });
+      setImageUrl(data?.url);
+      toast.success('Successfully uploaded', { id: toastId });
+    } catch (error) {
+      toast.error('Unable to upload', { id: toastId });
+      setImageUrl('');
+    } finally {
+      setDisabled(false);
+    }
   };
 
   const handleOnSubmit: FormikConfig<ListingFormValues>['onSubmit'] = async (values) => {

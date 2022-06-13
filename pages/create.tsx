@@ -5,7 +5,9 @@ import ListingForm from '@/components/ListingForm';
 import { HomeCreateData } from '@/types/home';
 
 const Create = () => {
-  const addHome = (data: HomeCreateData) => axios.post('/api/homes', data);
+  const addHome = (data: HomeCreateData) => {
+    axios.post('/api/homes', data);
+  };
 
   return (
     <Layout>
