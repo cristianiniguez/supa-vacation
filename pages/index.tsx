@@ -1,9 +1,26 @@
+import { GetServerSideProps, NextPage } from 'next';
+import { Home, PrismaClient } from '@prisma/client';
+
 import Layout from '@/components/Layout';
 import Grid from '@/components/Grid';
 
-import homes from 'data.json';
+const prisma = new PrismaClient();
 
-export default function Home() {
+type HomeProps = {
+  homes: Home[];
+};
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  const homes = await prisma.home.findMany();
+
+  return {
+    props: {
+      homes: JSON.parse(JSON.stringify(homes)),
+    },
+  };
+};
+
+const Home: NextPage<HomeProps> = ({ homes }) => {
   return (
     <Layout>
       <h1 className='text-xl font-medium text-gray-800'>Top-rated places to stay</h1>
@@ -13,4 +30,6 @@ export default function Home() {
       </div>
     </Layout>
   );
-}
+};
+
+export default Home;

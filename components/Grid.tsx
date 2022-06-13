@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { ExclamationIcon } from '@heroicons/react/outline';
+import { Home } from '@prisma/client';
 
 import Card from '@/components/Card';
-import { Home } from '@/types/index';
 
 type GridProps = {
   homes?: Home[];

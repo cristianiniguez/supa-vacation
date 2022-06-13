@@ -1,9 +1,8 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Home } from '@prisma/client';
 import { HeartIcon } from '@heroicons/react/solid';
-
-import { Home } from '@/types/index';
 
 type CardProps = Partial<Home> & {
   favorite?: boolean;
