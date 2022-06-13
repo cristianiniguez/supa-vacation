@@ -6,7 +6,7 @@ import { ArrowUpIcon } from '@heroicons/react/outline';
 
 type ImageUploadProps = {
   label?: string;
-  initialImage?: { src: string; alt: string };
+  initialImage?: { src: string | null; alt: string };
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   accept?: string;
   sizeLimit?: number;

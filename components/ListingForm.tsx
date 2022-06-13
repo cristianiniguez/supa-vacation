@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import { Formik, Form, FormikConfig } from 'formik';
 import Input from '@/components/Input';
 import ImageUpload from '@/components/ImageUpload';
-import { Home } from '../types';
+import { HomeCreateData } from '@/types/home';
 
 const ListingSchema = Yup.object().shape({
   title: Yup.string().trim().required(),
@@ -16,16 +16,13 @@ const ListingSchema = Yup.object().shape({
   baths: Yup.number().positive().integer().min(1).required(),
 });
 
-type ListingFormValues = Pick<
-  Home,
-  'title' | 'description' | 'price' | 'guests' | 'beds' | 'baths'
->;
+type ListingFormValues = Omit<HomeCreateData, 'image'>;
 
 type ListingFormProps = {
-  initialValues?: ListingFormValues & Pick<Home, 'image'>;
+  initialValues?: HomeCreateData;
   redirectPath?: string;
   buttonText?: string;
-  onSubmit?: (values: ListingFormValues & Pick<Home, 'image'>) => void;
+  onSubmit?: (values: HomeCreateData) => void;
 };
 
 const ListingForm: FC<ListingFormProps> = ({
@@ -39,7 +36,7 @@ const ListingForm: FC<ListingFormProps> = ({
   const [disabled, setDisabled] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialValues?.image ?? '');
 
-  const upload = async (image: Home['image']) => {
+  const upload = async (image: HomeCreateData['image']) => {
     // TODO: Upload image to remote storage
   };
 
